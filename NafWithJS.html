@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Comptabilité Scolaire</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+
+<body>
+
+    <!-- Barre de navigation -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-primary">
+        <div class="container-fluid">
+            <a class="navbar-brand fw-bold" href="#">ENSITECH</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link btn btn-outline-info me-2 active text-white" aria-current="page" href="#">Comptabilité</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link btn btn-outline-info me-2 text-white" href="#">Accueil</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link btn btn-outline-info me-2 text-white" href="#">Espace Etudiant</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link btn btn-outline-info me-2 text-white" href="#">Espace Enseignant</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link btn btn-outline-info me-2 text-white" href="#">Administration</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Section Comptabilité -->
+    <div class="container mt-4">
+        <h2>Comptabilité</h2>
+
+        <!-- Tableau des Transactions -->
+        <div class="card mb-4 shadow-sm">
+            <div class="card-header fw-bold">
+                Transactions Récentes
+            </div>
+            <div class="card-body">
+                <table class="table table-striped" id="transactionsTable">
+                    <thead>
+                        <tr>
+                            <th scope="col">Date</th>
+                            <th scope="col">Description</th>
+                            <th scope="col">Montant</th>
+                            <th scope="col">Type</th>
+                            <th scope="col">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Transactions dynamiques -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Formulaire d'Ajout de Transaction -->
+        <div class="card mb-4 shadow-sm">
+            <div class="card-header fw-bold">
+                Ajouter une Nouvelle Transaction
+            </div>
+            <div class="card-body">
+                <form id="transactionForm">
+                    <div class="row mb-3">
+                        <div class="col-md-4">
+                            <label for="date" class="form-label">Date</label>
+                            <input type="date" class="form-control" id="date" required>
+                        </div>
+                        <div class="col-md-4">
+                            <label for="description" class="form-label">Description</label>
+                            <input type="text" class="form-control" id="description" placeholder="Description de la transaction" required>
+                        </div>
+                        <div class="col-md-4">
+                            <label for="amount" class="form-label">Montant (CFA)</label>
+                            <input type="number" class="form-control" id="amount" step="1.000" placeholder="Montant" required>
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-md-4">
+                            <label for="type" class="form-label">Type</label>
+                            <select class="form-select" id="type" required>
+                                <option value="Entrée">Entrée</option>
+                                <option value="Sortie">Sortie</option>
+                            </select>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Ajouter Transaction</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Récapitulatif Financier -->
+        <div class="card shadow-sm">
+            <div class="card-header fw-bold">
+                Récapitulatif Financier
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <h5>Total Entrées: <span id="totalEntrées" class="text-success">1.000 CFA</span></h5>
+                    </div>
+                    <div class="col-md-6">
+                        <h5>Total Sorties: <span id="totalSorties" class="text-danger">1.000 CFA</span></h5>
+                    </div>
+                </div>
+                <hr>
+                <h5>Solde Final: <span id="soldeFinal" class="text-primary">1.000 CFA</span></h5>
+            </div>
+        </div>
+
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Variables pour stocker les totaux
+        let totalEntrées = 0;
+        let totalSorties = 0;
+
+        // Fonction pour mettre à jour le récapitulatif financier
+        function updateSummary() {
+            document.getElementById('totalEntrées').innerText = totalEntrées.toFixed(2) + ' CFA';
+            document.getElementById('totalSorties').innerText = totalSorties.toFixed(2) + ' CFA';
+            const soldeFinal = totalEntrées - totalSorties;
+            document.getElementById('soldeFinal').innerText = soldeFinal.toFixed(2) + ' CFA';
+        }
+
+        // Fonction pour ajouter une transaction
+        document.getElementById('transactionForm').addEventListener('submit', function (e) {
+            e.preventDefault();
+
+            // Récupération des données du formulaire
+            const date = document.getElementById('date').value;
+            const description = document.getElementById('description').value;
+            const amount = parseFloat(document.getElementById('amount').value);
+            const type = document.getElementById('type').value;
+
+            // Mise à jour des totaux
+            if (type === 'Entrée') {
+                totalEntrées += amount;
+            } else if (type === 'Sortie') {
+                totalSorties += amount;
+            }
+
+            // Mise à jour du récapitulatif
+            updateSummary();
+
+            // Ajouter la transaction au tableau
+            const tableBody = document.querySelector('#transactionsTable tbody');
+            const newRow = document.createElement('tr');
+            newRow.innerHTML = `
+                <td>${date}</td>
+                <td>${description}</td>
+                <td>${amount.toFixed(2)} €</td>
+                <td>${type}</td>
+                <td><button class="btn btn-sm btn-danger">Supprimer</button></td>
+            `;
+
+            // Ajouter un événement pour le bouton de suppression
+            newRow.querySelector('button').addEventListener('click', function () {
+                // Mise à jour des totaux lors de la suppression
+                if (type === 'Entrée') {
+                    totalEntrées -= amount;
+                } else if (type === 'Sortie') {
+                    totalSorties -= amount;
+                }
+
+                // Mise à jour du récapitulatif
+                updateSummary();
+
+                // Supprimer la ligne du tableau
+                newRow.remove();
+            });
+
+            tableBody.appendChild(newRow);
+
+            // Réinitialiser le formulaire
+            document.getElementById('transactionForm').reset();
+        });
+    </script>
+</body>
+
+</html>
